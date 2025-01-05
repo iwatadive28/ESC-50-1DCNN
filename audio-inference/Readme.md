@@ -30,6 +30,13 @@ curl -X POST http://localhost:5000/predict \
     -F "file=@audio-inference/data/test_voice.m4a"
 ```
 
+csvファイル （/data/sample_from_edge/clap/log_2024-12-31_18-02-48.csv をアップロードする場合。）
+```
+$ curl -X POST http://localhost:5000/predict \
+    -H "Content-Type: multipart/form-data" \
+    -F "file=@audio-inference/data/sample_from_edge/clap/log_2024-12-31_18-02-48.csv"
+```
+
 JSONレスポンス
 ```
 {
