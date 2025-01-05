@@ -1,5 +1,5 @@
 # ESC-50-1DCNN
 Sample
 
-## audio-interface 
+## audio-inference
 ローカルPC上でDockerで実行可能な環境を構築。
