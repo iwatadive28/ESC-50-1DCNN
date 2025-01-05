@@ -1,23 +1,19 @@
 FROM python:3.9-slim
 
-# 作業ディレクトリの設定
+# 作業ディレクトリ設定
 WORKDIR /app
 
-# 必要なシステムパッケージをインストール
-RUN apt-get update && apt-get install -y \
-    libsndfile1 \
-    portaudio19-dev \
-    ffmpeg \
-    python3-tk \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# ffmpegをインストール
+RUN apt-get update && apt-get install -y ffmpeg && apt-get clean
 
-# 必要なPythonライブラリをインストール
+# 必要なファイルをコピー
 COPY requirements.txt .
+COPY app.py .
+COPY inference.py .
+COPY model /app/model
+
+# 必要なライブラリをインストール
 RUN pip install --no-cache-dir -r requirements.txt
 
-# アプリケーションコードをコピー
-COPY . .
-
-# コンテナ起動時のデフォルトコマンド
-CMD ["python", "main.py"]
+# Flaskアプリケーションを実行
+CMD ["python", "app.py"]
