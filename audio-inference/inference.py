@@ -1,14 +1,22 @@
 import csv
 import wave
+import os
 import numpy as np
 from pydub import AudioSegment
 import librosa
 from tensorflow.keras.models import load_model
+from plot_waveform import plot_waveform
 
 # ハイパーパラメータ
 SAMPLE_RATE = 16000
 DURATION = 3  # 秒数
 MODEL_SAVE_PATH = "/app/model/trained_1d_cnn_model.keras"
+
+# ファイル名を安全に生成する関数
+def generate_wav_filename(original_csv_path):
+    """CSVファイル名を基にした安全なWAVファイル名を生成"""
+    sanitized_name = os.path.basename(original_csv_path).replace(".csv", "").replace(" ", "_").replace("/", "_")
+    return f"output/{sanitized_name}.wav"
 
 # CSVをWAVに変換する関数
 def csv_to_wav(csv_file_path, wav_file_path, sample_rate):
@@ -33,6 +41,9 @@ def csv_to_wav(csv_file_path, wav_file_path, sample_rate):
         # 正規化（-1.0〜1.0の範囲にスケール）
         audio_data = audio_data / np.max(np.abs(audio_data))
 
+        # 出力ディレクトリの確認と作成
+        os.makedirs(os.path.dirname(wav_file_path), exist_ok=True)
+
         # WAVファイルに書き込み
         with wave.open(wav_file_path, 'w') as wav_file:
             wav_file.setnchannels(1)  # モノラル
@@ -56,13 +67,19 @@ def preprocess_audio(file_path):
 
         elif file_path.endswith('.csv'):
             # csvをwavに変換
-            temp_wav_path = file_path.replace('.csv', '.wav')
+            temp_wav_path = generate_wav_filename(file_path)
             file_path = csv_to_wav(file_path, temp_wav_path, sample_rate=10000)
 
         # librosaで音声読み込み
         y, sr = librosa.load(file_path, sr=SAMPLE_RATE)
     except Exception as e:
         raise ValueError(f"音声ファイルの読み込みに失敗しました: {e}")
+
+    # 出力ディレクトリの確認と作成
+    os.makedirs("output", exist_ok=True)
+
+    # 波形データとサンプルレートを渡してプロット
+    plot_waveform(y, SAMPLE_RATE, file_path.replace('.wav', '.png'))
 
     # 指定された長さに切り詰めるか、ゼロ埋め
     max_length = SAMPLE_RATE * DURATION

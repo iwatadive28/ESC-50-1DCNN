@@ -65,3 +65,6 @@ instance/
 
 # Windows
 Thumbs.db
+
+# 
+output/

@@ -1,0 +1,13 @@
+services:
+  app:
+    build:
+      context: .
+    container_name: audio_inference_app
+    ports:
+      - "5000:5000"  # Flaskアプリケーションのポートをホストに公開
+    volumes:
+      - ./model:/app/model  # モデルディレクトリをマウント
+      - ./data:/app/data  # データディレクトリをマウント
+      - ./output:/app/output # 出力先
+    environment:
+      - PYTHONPATH=/app

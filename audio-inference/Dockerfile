@@ -16,7 +16,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # アプリケーションファイルをコピー
 COPY app.py .
 COPY inference.py .
+COPY plot_waveform.py .
 COPY model /app/model
+
+# Pythonモジュール検索パスを設定
+ENV PYTHONPATH="/app"
 
 # Flaskアプリケーションを実行
 CMD ["python", "app.py"]
