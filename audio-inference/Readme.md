@@ -2,7 +2,7 @@
 ## Dockerイメージのビルド
 
 ```bash
-$ dockebuild -t audio-inference .
+$ docker build -t audio-inference .
 ```
 ## Dockerコンテナの実行
 Linuxでの動作を想定。
@@ -19,7 +19,7 @@ Linuxでの動作を想定。
 
 - サーバー側で実行。
 ```bash
-$ dockerun -it --rm -p 5000:5000 audio-inference
+$ docker run -it --rm -p 5000:5000 audio-inference
 ```
 
 - クライアント側で実行。
@@ -27,7 +27,7 @@ $ dockerun -it --rm -p 5000:5000 audio-inference
 ```bash
 curl -X POST http://localhost:5000/predict \
     -H "Content-Type: multipart/form-data" \
-    -F "file=@audio-interface/data/test_voice.m4a"
+    -F "file=@audio-inference/data/test_voice.m4a"
 ```
 
 JSONレスポンス
