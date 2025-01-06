@@ -54,45 +54,45 @@ $ curl -X POST http://localhost:5000/predict \
 AWS CLI を使って ECR にログインします。
 
 ```bash
-aws ecr get-login-password --region <REGION> | docker login --username AWS --password-stdin <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com
+$ aws ecr get-login-password --region <REGION> | docker login --username AWS --password-stdin <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com
 ```
 
 例:
 
 ```bash
-aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 937650212781.dkr.ecr.ap-northeast-1.amazonaws.com
+$ aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 937650212781.dkr.ecr.ap-northeast-1.amazonaws.com
 ```
 
 ### 2. イメージを ECR にタグ付け
 ECR リポジトリ用のタグを設定します。
 
 ```bash
-docker tag <LOCAL_IMAGE>:<TAG> <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/<ECS_REPO_NAME>:<TAG>
+$ docker tag <LOCAL_IMAGE>:<TAG> <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/<ECS_REPO_NAME>:<TAG>
 ```
 
 例:
 
 ```bash
-docker tag audio-inference:latest 937650212781.dkr.ecr.ap-northeast-1.amazonaws.com/audio-inference:latest
+$ docker tag audio-inference:latest 937650212781.dkr.ecr.ap-northeast-1.amazonaws.com/audio-inference:latest
 ```
 
 ### 3. ECR にイメージをプッシュ
 以下のコマンドで新しいイメージを ECR にプッシュします。
 
 ```bash
-docker push <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/<ECS_REPO_NAME>:<TAG>
+$ docker push <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/<ECS_REPO_NAME>:<TAG>
 ```
 例:
 
 ```bash
-docker push 937650212781.dkr.ecr.ap-northeast-1.amazonaws.com/audio-inference:latest
+$ docker push 937650212781.dkr.ecr.ap-northeast-1.amazonaws.com/audio-inference:latest
 ```
 
 タスク定義の登録
 以下のコマンドで新しいタスク定義を登録します。
 
 ```bash
-aws ecs register-task-definition --cli-input-json file://task-definition.json
+$ aws ecs register-task-definition --cli-input-json file://task-definition.json
 ```
 
 ### 4. ECS サービスを更新
@@ -100,23 +100,26 @@ ECS サービスが新しいタスク定義を使用するように更新しま�
 
 コマンド例
 ```bash
-aws ecs update-service \
+$ aws ecs update-service \
     --cluster audio-inference-cluster \
     --service audio-inference-service \
     --task-definition audio-inference-task
 ```
 これにより、ECS サービスが新しいタスク定義を使用してタスクを再作成します。
 
+**注意：新しいタスクはプライベートIP, パブリックIPが変わります。
+タスクを更新したら、ターゲットグループの設定でIPを設定しなおしてください。**
+
 ### 5. デプロイの確認
 タスクが新しいイメージで動作しているか確認：
 
 ```bash
-aws ecs list-tasks --cluster audio-inference-cluster
+$ aws ecs list-tasks --cluster audio-inference-cluster
 ```
 タスクが正しく動作している場合、ヘルスチェックステータスが Healthy に変化するはずです。
 
 ```bash
-aws elbv2 describe-target-health --target-group-arn <TARGET_GROUP_ARN>
+$ aws elbv2 describe-target-health --target-group-arn <TARGET_GROUP_ARN>
 ```
 
 ## 使い方（AWS版）
