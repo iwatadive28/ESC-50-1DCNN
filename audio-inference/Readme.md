@@ -49,6 +49,54 @@ $ curl -X POST http://localhost:5000/predict \
     -F "file=@audio-inference/data/sample_from_edge/clap/log_2024-12-31_18-02-48.csv"
 ```
 
+## AWS ECR にイメージをプッシュ
+### 1. ECR リポジトリのログイン
+AWS CLI を使って ECR にログインします。
+
+```bash
+aws ecr get-login-password --region <REGION> | docker login --username AWS --password-stdin <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com
+```
+
+例:
+
+```bash
+aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 937650212781.dkr.ecr.ap-northeast-1.amazonaws.com
+```
+
+### 2. イメージを ECR にタグ付け
+ECR リポジトリ用のタグを設定します。
+
+```bash
+docker tag <LOCAL_IMAGE>:<TAG> <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/<ECS_REPO_NAME>:<TAG>
+```
+
+例:
+
+```bash
+docker tag audio-inference:latest 937650212781.dkr.ecr.ap-northeast-1.amazonaws.com/audio-inference:latest
+```
+
+### 3. ECR にイメージをプッシュ
+以下のコマンドで新しいイメージを ECR にプッシュします。
+
+```bash
+docker push <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/<ECS_REPO_NAME>:<TAG>
+```
+例:
+
+```bash
+docker push 937650212781.dkr.ecr.ap-northeast-1.amazonaws.com/audio-inference:latest
+```
+
+## 使い方（AWS版）
+
+```bash
+$ curl -X POST http://audio-inference-alb-1666523816.ap-northeast-1.elb.amazonaws.com/predict \
+    -H "Content-Type: multipart/form-data" \
+    -F "file=@audio-inference/data/sample_from_edge/voice/log_2024-12-31_18-13-16.csv"
+{"confidence":0.9388715624809265,"predicted_class":1,"predicted_label":"People"}
+```
+
 ## 使い方（Old）
 
 - サーバー側で実行。

@@ -16,7 +16,8 @@ MODEL_SAVE_PATH = "/app/model/trained_1d_cnn_model.keras"
 def generate_wav_filename(original_csv_path):
     """CSVファイル名を基にした安全なWAVファイル名を生成"""
     sanitized_name = os.path.basename(original_csv_path).replace(".csv", "").replace(" ", "_").replace("/", "_")
-    return f"output/{sanitized_name}.wav"
+    # return f"output/{sanitized_name}.wav"
+    return f"output/tmp_audio.wav"
 
 # CSVをWAVに変換する関数
 def csv_to_wav(csv_file_path, wav_file_path, sample_rate):
