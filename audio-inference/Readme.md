@@ -88,6 +88,37 @@ docker push <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/<ECS_REPO_NAME>:<TAG>
 docker push 937650212781.dkr.ecr.ap-northeast-1.amazonaws.com/audio-inference:latest
 ```
 
+タスク定義の登録
+以下のコマンドで新しいタスク定義を登録します。
+
+```bash
+aws ecs register-task-definition --cli-input-json file://task-definition.json
+```
+
+### 4. ECS サービスを更新
+ECS サービスが新しいタスク定義を使用するように更新します。
+
+コマンド例
+```bash
+aws ecs update-service \
+    --cluster audio-inference-cluster \
+    --service audio-inference-service \
+    --task-definition audio-inference-task
+```
+これにより、ECS サービスが新しいタスク定義を使用してタスクを再作成します。
+
+### 5. デプロイの確認
+タスクが新しいイメージで動作しているか確認：
+
+```bash
+aws ecs list-tasks --cluster audio-inference-cluster
+```
+タスクが正しく動作している場合、ヘルスチェックステータスが Healthy に変化するはずです。
+
+```bash
+aws elbv2 describe-target-health --target-group-arn <TARGET_GROUP_ARN>
+```
+
 ## 使い方（AWS版）
 
 ```bash

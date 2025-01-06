@@ -4,6 +4,10 @@ import os
 
 app = Flask(__name__)
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    return "Healthy", 200
+
 # モデルロード
 model = load_inference_model()
 labels = ["Other", "People"]  # クラス名を定義
