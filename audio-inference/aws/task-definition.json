@@ -7,8 +7,8 @@
     {
       "name": "audio-inference-container",
       "image": "937650212781.dkr.ecr.ap-northeast-1.amazonaws.com/audio-inference:latest",
-      "memory": 512,
-      "cpu": 256,
+      "memory": 2048,
+      "cpu": 1024,
       "essential": true,
       "portMappings": [
         {
@@ -19,6 +19,6 @@
       ]
     }
   ],
-  "cpu": "256",
-  "memory": "512"
+  "cpu": "1024",
+  "memory": "2048"
 }

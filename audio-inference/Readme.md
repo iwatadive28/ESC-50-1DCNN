@@ -131,6 +131,12 @@ $ curl -X POST http://audio-inference-alb-1666523816.ap-northeast-1.elb.amazonaw
 {"confidence":0.9388715624809265,"predicted_class":1,"predicted_label":"People"}
 ```
 
+## ToDo
+
+- ECSのオートスケーリング: リクエストが連続するとCPU、メモリ使用率が100%近くなってサーバ-ダウンした。
+- ドメイン名の策定
+- セキュリティ対策
+
 ## 使い方（Old）
 
 - サーバー側で実行。
