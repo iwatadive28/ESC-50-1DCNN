@@ -122,6 +122,38 @@ $ aws ecs list-tasks --cluster audio-inference-cluster
 $ aws elbv2 describe-target-health --target-group-arn <TARGET_GROUP_ARN>
 ```
 
+## ECSサービス停止方法
+タスクの停止
+```
+aws ecs update-service \
+  --service $service_name \
+  --cluster $cluster_name \
+  --desired-count 0
+```
+
+タスクの起動
+```
+aws ecs update-service \
+  --service $service_name \
+  --cluster $cluster_name \
+  --desired-count ${desired_count:-1}
+```
+
+#### 例
+```
+aws ecs update-service \
+  --service audio-inference-service \
+  --cluster audio-inference-cluster \
+  --desired-count 0
+```
+
+```
+aws ecs update-service \
+  --service audio-inference-service \
+  --cluster audio-inference-cluster \
+  --desired-count ${desired_count:-1}
+```
+
 ## 使い方（AWS版）
 
 ```bash
@@ -130,7 +162,6 @@ $ curl -X POST http://audio-inference-alb-1666523816.ap-northeast-1.elb.amazonaw
     -F "file=@audio-inference/data/sample_from_edge/voice/log_2024-12-31_18-13-16.csv"
 {"confidence":0.9388715624809265,"predicted_class":1,"predicted_label":"People"}
 ```
-
 ## ToDo
 
 - ECSのオートスケーリング: リクエストが連続するとCPU、メモリ使用率が100%近くなってサーバ-ダウンした。
