@@ -1,6 +1,6 @@
-flask
-tensorflow-cpu
-librosa
-numpy
-pydub
-matplotlib
+Flask==3.1.0
+tensorflow-cpu==2.18.0
+librosa==0.10.2.post1
+numpy==2.0.2
+pydub==0.25.1
+matplotlib==3.9.4
