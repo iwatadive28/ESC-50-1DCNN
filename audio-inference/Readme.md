@@ -1,6 +1,7 @@
 # Dockerイメージのビルドと実行方法
 ## Dockerイメージのビルド
 
+CPU アーキテクチャはx86_64。
 ```bash
 $ docker build -t audio-inference .
 ```
